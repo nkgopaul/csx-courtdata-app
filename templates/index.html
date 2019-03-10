@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>CRXSS</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js'></script>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/mainpage.css') }}">
+  </head>
+  <body>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+    <div class="main-container">
+        <br/>
+        <div class="search-container row justify-content-center">
+            <form class="col-12 col-md-10 col-lg-8" id="question_form">
+                <div class="card card-sm">
+                    <div class="card-body row align-items-center">
+                        <div class="col">
+                            <input class="form-control form-control-lg form-control-borderless" name="question" id="question-input" type="search" placeholder="Ask us anything about our legal data">
+                        </div>
+                        <div class="col-auto">
+                            <input class="btn btn-lg btn-success" type="submit" />
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="results-container">
+
+    </div>
+    <script type="text/javascript">
+            $('#question_form').submit(function(e){
+                e.preventDefault();
+                
+                const question = $('#question-input').val();
+                $.ajax({
+                    url: "/legal_query",
+                    type: "post",
+                    data: JSON.stringify({'question' : question}),
+                    contentType: "application/json; charset=utf-8",
+                    success: function(response) {
+                        $('#results-container').html(response);
+                    },
+                    error: function(response) {
+                        console.log(response);
+                    }
+                });
+            });
+    </script>
+  </body>
+</html>
