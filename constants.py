@@ -1,5 +1,5 @@
 LABELS = {
-    'SUM': ['total', 'total number', 'sum', 'total amount'],
+    'SUM': ['total', 'total number', 'sum', 'total amount', 'number of', 'all'],
     'CASE': ['cases', 'case', 'caseload'],
     'TIME': ['time', 'over time', 'length'],
     'TYPE': ['type', 'types', 'kind', 'role'],
@@ -18,32 +18,38 @@ LABELS = {
 
 SQL_MAPPING = {  
    'CASE SUM TYPE':{  
-      'title':'Total Number of Each Case Type (Criminal vs. Civil)',
-      'sql':'SELECT type, COUNT(type) as case_type FROM cases GROUP BY type;',
-      'visuals': 'bar_chart.html'
+        'title':'Total Number of Each Case Type (Criminal vs. Civil)',
+        'sql':'SELECT type, COUNT(type) as case_type FROM cases GROUP BY type;',
+        'template': 'bar_chart.html'
    },
    'CASE SUM TIME':{
+        'title':'Number of Cases Over Time by Terminating Date',
+        'sql': 'SELECT DATE_FORMAT(terminating_date,\'%Y-%m\') AS date, COUNT(*) AS total_cases FROM cases WHERE terminating_date IS NOT NULL GROUP BY date;',
+        'template': 'line_chart.html'
    },
    'CASE SUM TIME TYPE':{  
-      'question':'',
-      'sql':''
+        'question':'',
+        'sql':''
    },
-   'CASE JUDGE':{  
-      'title':'Assigned Caseload Per Judge',
-      'sql':'SELECT federal_judge_id, first_name, middle_name, last_name, suffix, COUNT(*) AS total_cases FROM cases JOIN federal_judges_demographics ON federal_judge_id=federal_judges_demographics.id GROUP BY federal_judge_id;',
-      'visuals': 'bar_chart.html'
+   'CASE JUDGE SUM':{  
+        'title':'Assigned Caseload Per Judge',
+        'sql':'SELECT CONCAT_WS(\' \', first_name, middle_name, last_name, suffix) as judge, COUNT(*) AS total_cases FROM cases JOIN federal_judges_demographics ON federal_judge_id=federal_judges_demographics.id GROUP BY federal_judge_id ORDER BY total_cases DESC;',
+        'template': 'bar_chart.html'
    },
-   'CASE JUDGE TYPE':{  
-      'question':'',
-      'sql':''
+   'CASE JUDGE SUM TYPE':{  
+        'title':'Assigned Caseload Per Judge Type',
+        'sql':'SELECT IFNULL(court_type, \'Uncategorized\'), count(*) as total_cases FROM cases LEFT JOIN federal_judges_service ON cases.federal_judge_id=federal_judges_service.nid GROUP BY court_type ORDER BY total_cases DESC;',
+        'template': 'bar_chart.html'
    },
-   'CASE GENDER JUDGE':{  
-      'question':'',
-      'sql':''
+   'CASE GENDER JUDGE SUM':{  
+        'title':'Assigned Caseload Per Judge Gender',
+        'sql':'SELECT IFNULL(gender, \'Uncategorized\'), count(*) as total_cases FROM cases LEFT JOIN federal_judges_demographics ON cases.federal_judge_id=federal_judges_demographics.id GROUP BY gender ORDER BY total_cases DESC;',
+        'template': 'bar_chart.html'
    },
-   'CASE ETHNICITY JUDGE':{  
-      'question':'',
-      'sql':''
+   'CASE ETHNICITY JUDGE SUM':{  
+        'title':'Assigned Caseload Per Judge Ethnicity',
+        'sql':'SELECT IFNULL(ethnicity, \'Uncategorized\'), count(*) as total_cases FROM cases LEFT JOIN federal_judges_demographics ON cases.federal_judge_id=federal_judges_demographics.id GROUP BY ethnicity ORDER BY total_cases DESC;',
+        'template': 'bar_chart.html'
    },
    'CASE JUDGE POLITICAL_PARTY':{  
       'question':'',

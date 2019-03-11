@@ -40,11 +40,19 @@ def legal_query():
     doc = nlp(request.get_json()['question'])
     matches = matcher(doc)
     matched_tags = [nlp.vocab.strings[i[0]] for i in matches]
+    print(matched_tags)
     matched_tags = sorted(set(matched_tags))
     if not matched_tags:
-        return ('', http.client.NO_CONTENT)
+        return render_template('no_query_found.html')
+    
+    print(matched_tags)
 
-    matched_query = SQL_MAPPING[' '.join(matched_tags)]
+    try:
+        matched_query = SQL_MAPPING[' '.join(matched_tags)]
+    except KeyError:
+        return render_template('no_query_found.html')
+
+    print(matched_query['sql'])
     cursor.execute(matched_query['sql'])
     
     labels = []
@@ -53,9 +61,8 @@ def legal_query():
         labels.append(row[0])
         for i in range(1, len(row)):
             values.append(row[i])
-    print(labels)
-    print(values)
-    return render_template('bar_chart.html', title=matched_query['title'], values=values, labels=labels, max=max(values))
+
+    return render_template(matched_query['template'], title=matched_query['title'], values=values, labels=labels, max=max(values))
 
 if __name__ == "__main__":
     add_legal_patterns()

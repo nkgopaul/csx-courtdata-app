@@ -5,15 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <title>CRXSS</title>
+    <title>Analytica Federale</title>
     <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/mainpage.css') }}">
   </head>
-  <body>
+  <body scroll="no">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+    <nav class="navbar navbar-dark bg-dark" style="display: flex; justify-content: flex-start;">
+        <i class="fa fa-balance-scale" style="font-size: 2em; color: white"></i>
+        <a class="navbar-brand" style="padding-left: 1em;" href="#">Analytica Federale</a>
+    </nav>
+          
     <div class="main-container">
         <br/>
         <div class="search-container row justify-content-center">
@@ -21,7 +27,7 @@
                 <div class="card card-sm">
                     <div class="card-body row align-items-center">
                         <div class="col">
-                            <input class="form-control form-control-lg form-control-borderless" name="question" id="question-input" type="search" placeholder="Ask us anything about our legal data">
+                            <input class="form-control form-control-lg form-control-borderless" name="question" id="question-input" type="search" placeholder="Ask us anything about our legal data" autocomplete="off">
                         </div>
                         <div class="col-auto">
                             <input class="btn btn-lg btn-success" type="submit" />
@@ -30,13 +36,19 @@
                 </div>
             </form>
         </div>
-    </div>
-    <div id="results-container">
-
+        <div id="results-container">
+    
+        </div>
     </div>
     <script type="text/javascript">
             $('#question_form').submit(function(e){
                 e.preventDefault();
+                $('#results-container').html(
+                    `<div class="d-flex justify-content-center" style="padding-top:12em">
+                        <div class="spinner-border" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>`);
                 
                 const question = $('#question-input').val();
                 $.ajax({

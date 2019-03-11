@@ -1,0 +1,52 @@
+<div class="bar-container pt-5">
+    <center>
+        <h3>{{ title }}</h3>
+    </center>
+    <center>
+    
+        <canvas id="chart" class="m-0 p-0" width="1000" height="400"></canvas>
+        <script>
+        // bar chart data
+        var lineData = {
+            labels : [
+            {% for item in labels %}
+                "{{ item }}",
+            {% endfor %}
+            ],
+            datasets : [{
+            backgroundColor: "rgba(91,184,255,0.2)",
+            data : [
+                {% for item in values %}
+                    "{{ item }}",
+                {% endfor %}
+                ]
+            }
+            ]
+        }
+        var options = {
+            responsive: false,
+            legend: {
+            display: false
+            },
+            scales: {
+            xAxes: [{
+                ticks: {
+                }
+            }]
+            }
+        }
+    
+        Chart.defaults.global.animation.duration = 1000
+    
+        var mychart = document.getElementById("chart");
+        var proposed_width = lineData.labels.length*50;
+        proposed_width < 500 ? mychart.width = 500 : mychart.width;
+        
+        var barChart = new Chart(mychart.getContext("2d"), {
+            type: 'line',
+            data: lineData,
+            options: options
+        });  
+        </script>
+    </center>
+</div>

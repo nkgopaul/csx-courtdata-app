@@ -3,7 +3,8 @@
     <h3>{{ title }}</h3>
   </center>
   <center>
-    <canvas id="chart" width="600" height="400"></canvas>
+
+    <canvas id="chart" class="m-0 p-0" width="1000" height="400"></canvas>
     <script>
       // bar chart data
       var barData = {
@@ -13,9 +14,7 @@
           {% endfor %}
 	      ],
         datasets : [{
-          fillColor: "rgba(151,187,205,0.2)",
-          strokeColor: "rgba(151,187,205,1)",
-          pointColor: "rgba(151,187,205,1)",
+          backgroundColor: "rgba(91,184,255,0.2)",
           data : [
             {% for item in values %}
                "{{ item }}",
@@ -24,22 +23,31 @@
           }
         ]
       }
-     // get bar chart canvas
-     var mychart = document.getElementById("chart").getContext("2d");
-     var steps = 10
-     var max = {{max}}
-     // draw bar chart
-     new Chart(mychart).Bar(barData, {
-       scaleOverride: true,
-       scaleSteps: steps,
-       scaleStepWidth: Math.ceil(max / steps),
-       scaleStartValue: 0,
-       scaleShowVerticalLines: true,
-       scaleShowGridLines : true,
-       barShowStroke : true,
-       scaleShowLabels: true
-       }
-     );
+      var options = {
+        responsive: false,
+        legend: {
+          display: false
+        },
+        scales: {
+          xAxes: [{
+            ticks: {
+              autoSkip: false
+            }
+          }]
+        }
+      }
+
+      Chart.defaults.global.animation.duration = 1000
+
+      var mychart = document.getElementById("chart");
+      var proposed_width = barData.labels.length*50;
+      proposed_width < 500 ? mychart.width = 500 : mychart.width;
+      
+      var barChart = new Chart(mychart.getContext("2d"), {
+        type: 'bar',
+        data: barData,
+        options: options
+      });  
     </script>
   </center>
 </div>
