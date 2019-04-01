@@ -14,10 +14,10 @@
           {% endfor %}
 	      ],
         datasets : [{
-          backgroundColor: "rgba(91,184,255,0.2)",
-          data : [
-            {% for item in values %}
-               "{{ item }}",
+            backgroundColor: "rgba(91,184,255,0.2)",
+            data : [
+              {% for item in data %}
+                "{{ item }}",
               {% endfor %}
             ]
           }
@@ -47,7 +47,7 @@
         type: 'bar',
         data: barData,
         options: options
-      });  
+      });
     </script>
   </center>
 </div>

@@ -61,6 +61,7 @@
                     },
                     error: function(response) {
                         console.log(response);
+                        $('#results-container').empty(); //@TODO - error feedback
                     }
                 });
             });

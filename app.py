@@ -40,29 +40,50 @@ def legal_query():
     doc = nlp(request.get_json()['question'])
     matches = matcher(doc)
     matched_tags = [nlp.vocab.strings[i[0]] for i in matches]
-    print(matched_tags)
     matched_tags = sorted(set(matched_tags))
+
+    print(matched_tags)
+
     if not matched_tags:
         return render_template('no_query_found.html')
-    
-    print(matched_tags)
 
     try:
         matched_query = SQL_MAPPING[' '.join(matched_tags)]
     except KeyError:
         return render_template('no_query_found.html')
 
-    print(matched_query['sql'])
     cursor.execute(matched_query['sql'])
-    
+
+    if(matched_query['template'] == 'heat_map.html'):
+        labels = []
+        data_labels = []
+        data = []
+
+        rows = cursor.fetchall()
+        for i in range(1, len(cursor.description)):
+            values = []
+            for row in rows:
+                if(i==1):
+                    labels.append(row[0])
+                values.append(float(row[i]))
+            data_labels.append(cursor.description[i][0])
+            data.append({
+                'label': cursor.description[i][0],
+                'data': values
+            })
+        
+        data = json.dumps(data)
+
+        return render_template(matched_query['template'], title=matched_query['title'], data=data, labels=labels)
+
     labels = []
-    values = []
+    data = []
+    
     for row in cursor.fetchall():
         labels.append(row[0])
         for i in range(1, len(row)):
-            values.append(row[i])
-
-    return render_template(matched_query['template'], title=matched_query['title'], values=values, labels=labels, max=max(values))
+            data.append(row[i])
+    return render_template(matched_query['template'], title=matched_query['title'], data=data, labels=labels, max=max(data))
 
 if __name__ == "__main__":
     add_legal_patterns()
