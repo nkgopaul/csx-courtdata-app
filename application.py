@@ -18,6 +18,7 @@ application.config['MYSQL_DATABASE_USER'] = os.getenv('MYSQL_DATABASE_USER')
 application.config['MYSQL_DATABASE_PASSWORD'] = os.getenv('MYSQL_DATABASE_PASSWORD')
 application.config['MYSQL_DATABASE_DB'] = os.getenv('MYSQL_DATABASE_DB')
 application.config['MYSQL_DATABASE_HOST'] = os.getenv('MYSQL_DATABASE_HOST')
+
 mysql = MySQL()
 mysql.init_app(application)
 conn = mysql.connect()
@@ -73,6 +74,8 @@ def legal_query():
             })
         
         data = json.dumps(data)
+        print(data)
+        print(labels)
 
         return render_template(matched_query['template'], title=matched_query['title'], data=data, labels=labels)
 

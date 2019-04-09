@@ -183,7 +183,36 @@ SQL_MAPPING = {
    },
    'CORRELATION GENDER JUDGE NOS':{
       'title':'Correlation Between Nature of Suit and Judge Gender',
-      'sql': 'SELECT title, SUM(IF(gender=\'Male\', 1, 0))/22762 AS Male, SUM(IF(gender=\'Female\', 1, 0))/8075 AS Female FROM federal_judges_demographics INNER JOIN cases ON federal_judges_demographics.id=cases.federal_judge_id INNER JOIN nature_of_suit ON code=nos_code GROUP BY nos_code;',
+      'sql': 'SELECT title, ROUND((SUM(IF(gender=\'Male\', 1, 0))/22762)*100, 2) AS Male, ROUND((SUM(IF(gender=\'Female\', 1, 0))/8075)*100, 2) AS Female FROM federal_judges_demographics INNER JOIN cases ON federal_judges_demographics.id=cases.federal_judge_id INNER JOIN nature_of_suit ON code=nos_code GROUP BY nos_code;',
+      'template': 'heat_map.html'
+   },
+   'CASE CORRELATION GENDER JUDGE OUTCOME':{
+      'title': 'Correlation Between Case Outcome and Judge Gender',
+      'sql': 'SELECT result, ROUND((SUM(IF(gender=\'Male\', 1, 0))/22762)*100, 2) AS Male, ROUND((SUM(IF(gender=\'Female\', 1, 0))/8075)*100, 2) AS Female FROM federal_judges_demographics INNER JOIN cases ON federal_judges_demographics.id=cases.federal_judge_id WHERE result<>\"CRIMINAL\" GROUP BY result;',
+      'template': 'heat_map.html'
+   },
+   'CASE CORRELATION GENDER JUDGE TYPE': {
+      'title': 'Correlation Between Case Type and Judge Gender',
+      'sql': 'SELECT type, ROUND((SUM(IF(gender=\'Male\', 1, 0))/22762)*100, 2) AS Male, ROUND((SUM(IF(gender=\'Female\', 1, 0))/8075)*100, 2) AS Female FROM federal_judges_demographics INNER JOIN cases ON federal_judges_demographics.id=cases.federal_judge_id GROUP BY type;',
+      'template': 'heat_map.html'
+   },
+   'CORRELATION JUDGE POLITICAL_PARTY NOS':{
+      'title':'Correlation Between Nature of Suit and Judge Gender',
+      'sql': 'SELECT title, ROUND((SUM(IF(appointing_president_party=\'Democratic\', 1, 0))/21940)*100, 2) AS Democratic, ROUND((SUM(IF(appointing_president_party=\'Republican\', 1, 0))/10077)*100, 2) AS Republican FROM federal_judges_service INNER JOIN cases ON nid=federal_judge_id INNER JOIN nature_of_suit ON code=nos_code GROUP BY nos_code;',
+      'template': 'heat_map.html'
+   },
+   'CASE CORRELATION JUDGE OUTCOME POLITICAL_PARTY':{
+      'title': 'Correlation Between Case Outcome and Judge Gender',
+      'sql': 'SELECT result, ROUND((SUM(IF(appointing_president_party=\'Democratic\', 1, 0))/21940)*100, 2) AS Democratic, ROUND((SUM(IF(appointing_president_party=\'Republican\', 1, 0))/10077)*100, 2) AS Republican FROM federal_judges_service INNER JOIN cases ON nid=federal_judge_id WHERE result<>\"CRIMINAL\" GROUP BY result;',
+      'template': 'heat_map.html'
+   },
+   'CASE CORRELATION JUDGE POLITICAL_PARTY TYPE': {
+      'title': 'Correlation Between Case Type and Judge Gender',
+      'sql': 'SELECT type, ROUND((SUM(IF(appointing_president_party=\'Democratic\', 1, 0))/21940)*100, 2) AS Democratic, ROUND((SUM(IF(appointing_president_party=\'Republican\', 1, 0))/10077)*100, 2) AS Republican FROM federal_judges_service INNER JOIN cases ON nid=federal_judge_id GROUP BY type;',
       'template': 'heat_map.html'
    }
 }
+'''
+
+SELECT type, ROUND((SUM(IF(gender='Male', 1, 0))/22762)*100, 2) AS Male, ROUND((SUM(IF(gender='Female', 1, 0))/8075)*100, 2) AS Female FROM federal_judges_demographics INNER JOIN cases ON federal_judges_demographics.id=cases.federal_judge_id GROUP BY result;
+'''
