@@ -14,7 +14,7 @@
           {% endfor %}
 	      ],
         datasets : [{
-            backgroundColor: "rgba(91,184,255,0.2)",
+            backgroundColor: "rgba(0,0,102,0.2)",
             data : [
               {% for item in data %}
                 "{{ item }}",
@@ -33,7 +33,12 @@
             ticks: {
               autoSkip: false
             }
-          }]
+          }],
+          yAxes: [{
+            ticks: {
+                beginAtZero: true
+            }
+        }]
         }
       }
 

@@ -39,17 +39,32 @@ SQL_MAPPING = {
    },
    'CASE JUDGE SUM TYPE':{  
         'title':'Assigned Caseload Per Judge Type',
-        'sql':'SELECT IFNULL(court_type, \'Uncategorized\'), count(*) as total_cases FROM cases LEFT JOIN federal_judges_service ON cases.federal_judge_id=federal_judges_service.nid GROUP BY court_type ORDER BY total_cases DESC;',
+        'sql':'SELECT court_type, count(*) as total_cases FROM cases LEFT JOIN federal_judges_service ON cases.federal_judge_id=federal_judges_service.nid WHERE court_type IS NOT NULL GROUP BY court_type ORDER BY total_cases DESC;',
         'template': 'bar_chart.html'
    },
    'CASE GENDER JUDGE SUM':{  
         'title':'Assigned Caseload Per Judge Gender',
-        'sql':'SELECT IFNULL(gender, \'Uncategorized\'), count(*) as total_cases FROM cases LEFT JOIN federal_judges_demographics ON cases.federal_judge_id=federal_judges_demographics.id GROUP BY gender ORDER BY total_cases DESC;',
+        'sql':'SELECT gender, count(*) as total_cases FROM cases LEFT JOIN federal_judges_demographics ON cases.federal_judge_id=federal_judges_demographics.id WHERE gender IS NOT NULL GROUP BY gender ORDER BY total_cases DESC;',
         'template': 'bar_chart.html'
    },
    'CASE ETHNICITY JUDGE SUM':{  
         'title':'Assigned Caseload Per Judge Ethnicity',
-        'sql':'SELECT IFNULL(ethnicity, \'Uncategorized\'), count(*) as total_cases FROM cases LEFT JOIN federal_judges_demographics ON cases.federal_judge_id=federal_judges_demographics.id GROUP BY ethnicity ORDER BY total_cases DESC;',
+        'sql':'SELECT ethnicity, count(*) as total_cases FROM cases LEFT JOIN federal_judges_demographics ON cases.federal_judge_id=federal_judges_demographics.id WHERE ethnicity IS NOT NULL GROUP BY ethnicity ORDER BY total_cases DESC;',
+        'template': 'bar_chart.html'
+   },
+   'AVG CASE JUDGE SUM TYPE':{  
+        'title':'Assigned Caseload Per Judge Type',
+        'sql':'SELECT court_type, count(*) as total_cases FROM cases LEFT JOIN federal_judges_service ON cases.federal_judge_id=federal_judges_service.nid WHERE court_type IS NOT NULL GROUP BY court_type ORDER BY total_cases DESC;',
+        'template': 'bar_chart.html'
+   },
+   'AVG CASE GENDER JUDGE SUM':{  
+        'title':'Average Caseload Per Judge Gender',
+        'sql':'SELECT gender, IF(gender=\'Male\', count(*)/55, count(*)/17) as total_cases FROM cases LEFT JOIN federal_judges_demographics ON cases.federal_judge_id=federal_judges_demographics.id WHERE gender IS NOT NULL GROUP BY gender ORDER BY total_cases DESC;',
+        'template': 'bar_chart.html'
+   },
+   'AVG CASE ETHNICITY JUDGE SUM':{  
+        'title':'Assigned Caseload Per Judge Ethnicity',
+        'sql':'SELECT ethnicity, count(*) as total_cases FROM cases LEFT JOIN federal_judges_demographics ON cases.federal_judge_id=federal_judges_demographics.id WHERE ethnicity IS NOT NULL GROUP BY ethnicity ORDER BY total_cases DESC;',
         'template': 'bar_chart.html'
    },
    'AVG CASE JUDGE POLITICAL_PARTY TIME':{  
@@ -212,7 +227,3 @@ SQL_MAPPING = {
       'template': 'heat_map.html'
    }
 }
-'''
-
-SELECT type, ROUND((SUM(IF(gender='Male', 1, 0))/22762)*100, 2) AS Male, ROUND((SUM(IF(gender='Female', 1, 0))/8075)*100, 2) AS Female FROM federal_judges_demographics INNER JOIN cases ON federal_judges_demographics.id=cases.federal_judge_id GROUP BY result;
-'''
